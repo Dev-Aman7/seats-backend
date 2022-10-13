@@ -1,23 +1,27 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import cors from 'cors';
 
 import './config.js'; // why? see here - https://www.npmjs.com/package/dotenv#how-do-i-use-dotenv-with-import-
 
 import connect from './src/components/db/setup.js';
-import userRouter from './src/components/user/index.js';
+import seat from './src/components/seat/index.js';
+import lab from './src/components/lab/index.js';
 import swaggerRouter from './src/docs/index.js';
 
 // connect to db
 connect();
 const app = express();
 
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use('/', userRouter);
+app.use('/seat', seat);
+app.use('/lab', lab);
 app.use('/swagger', swaggerRouter);
 
 // error handler
